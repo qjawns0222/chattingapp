@@ -478,12 +478,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                               password: userPassword,
                             );
                             if (newUser.user != null) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) {
-                                  return chatScreen();
-                                }),
-                              );
+
                             }
                           } catch (e) {
                             print(e);
@@ -511,12 +506,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                               'userEmail': userEmail,
                             });
                             if (newUser.user != null) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) {
-                                  return chatScreen();
-                                }),
-                              );
+
                               setState(() {
                                 showSpinner=false;
                               });
