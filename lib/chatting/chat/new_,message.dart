@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -11,12 +12,14 @@ class newMessage extends StatefulWidget {
 class _newMessageState extends State<newMessage> {
   var _userEnterMessage = '';
   final _controller=TextEditingController();
+  final user=FirebaseAuth.instance.currentUser;
 
   void _sendMessage() {
     FocusScope.of(context).unfocus();
     FirebaseFirestore.instance.collection('chat').add({
       'text': _userEnterMessage,
       'time':Timestamp.now(),
+      'userID':user!.uid,
     });
     _controller.clear();
     _userEnterMessage='';
@@ -31,6 +34,7 @@ class _newMessageState extends State<newMessage> {
         children: [
           Expanded(
             child: TextField(
+              maxLines: null,
               controller: _controller,
               decoration: InputDecoration(labelText: 'send a message'),
               onChanged: (e) {

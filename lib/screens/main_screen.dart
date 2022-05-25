@@ -13,7 +13,7 @@ class LoginSignupScreen extends StatefulWidget {
 }
 
 class _LoginSignupScreenState extends State<LoginSignupScreen> {
-  bool isSignupScreen = true;
+  bool isSignupScreen = false;
   bool showSpinner = false;
   final _formKey = GlobalKey<FormState>();
   final _formKey1 = GlobalKey<FormState>();
