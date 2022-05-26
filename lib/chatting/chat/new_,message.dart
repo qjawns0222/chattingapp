@@ -11,19 +11,23 @@ class newMessage extends StatefulWidget {
 
 class _newMessageState extends State<newMessage> {
   var _userEnterMessage = '';
-  final _controller=TextEditingController();
-  final user=FirebaseAuth.instance.currentUser;
+  final _controller = TextEditingController();
+  final user = FirebaseAuth.instance.currentUser;
 
-  void _sendMessage() {
+  void _sendMessage() async {
     FocusScope.of(context).unfocus();
+    final userData = await FirebaseFirestore.instance.collection('user').doc(
+        user!.uid).get();
     FirebaseFirestore.instance.collection('chat').add({
       'text': _userEnterMessage,
-      'time':Timestamp.now(),
-      'userID':user!.uid,
+      'time': Timestamp.now(),
+      'userID': user!.uid,
+      'username':userData.data()!['userName'],
     });
     _controller.clear();
-    _userEnterMessage='';
+    _userEnterMessage = '';
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +49,9 @@ class _newMessageState extends State<newMessage> {
             ),
           ),
           IconButton(
-            onPressed: _userEnterMessage.trim().isEmpty ? null : _sendMessage,
+            onPressed: _userEnterMessage
+                .trim()
+                .isEmpty ? null : _sendMessage,
             icon: Icon(Icons.send),
           )
         ],

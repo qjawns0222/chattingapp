@@ -1,3 +1,4 @@
+import 'package:chattingapp/add_image/add_image.dart';
 import 'package:chattingapp/config/palette.dart';
 import 'package:chattingapp/screens/chatScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,6 +30,14 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
     if (isvalid) {
       _formKey.currentState!.save();
     }
+  }
+
+  void showAlert(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Add_image() ;
+        });
   }
 
   @override
@@ -169,20 +178,40 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                               },
                               child: Column(
                                 children: [
-                                  Text(
-                                    'SIGNUP',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: isSignupScreen
-                                          ? pallette.activeColor
-                                          : pallette.textColor1,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'SIGNUP',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: isSignupScreen
+                                              ? pallette.activeColor
+                                              : pallette.textColor1,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (isSignupScreen) {
+                                            showAlert(context);
+                                          }
+                                        },
+                                        child: Icon(
+                                          Icons.image,
+                                          color: isSignupScreen
+                                              ? pallette.activeColor
+                                              : pallette.textColor1,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   if (isSignupScreen)
                                     Container(
                                       height: 2,
-                                      width: 55,
+                                      width: 95,
                                       color: Colors.orange,
                                     ),
                                 ],
@@ -477,9 +506,14 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                               email: userEmail,
                               password: userPassword,
                             );
-                            if (newUser.user != null) {
-
-                            }
+                            await FirebaseFirestore.instance
+                                .collection('user')
+                                .doc(newUser.user!.uid)
+                                .set({
+                              "userName": userName,
+                              'email': userEmail,
+                            });
+                            if (newUser.user != null) {}
                           } catch (e) {
                             print(e);
                             setState(() {
@@ -498,17 +532,10 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                             final newUser = await _authentication
                                 .signInWithEmailAndPassword(
                                     email: userEmail, password: userPassword);
-                            await FirebaseFirestore.instance
-                                .collection('user')
-                                .doc(newUser.user!.uid)
-                                .set({
-                              "userName": userName,
-                              'userEmail': userEmail,
-                            });
-                            if (newUser.user != null) {
 
+                            if (newUser.user != null) {
                               setState(() {
-                                showSpinner=false;
+                                showSpinner = false;
                               });
                             }
                           } catch (e) {

@@ -8,10 +8,15 @@ class Messages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user=FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('chat').
-      orderBy('time',descending: true,).snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('chat')
+          .orderBy(
+            'time',
+            descending: true,
+          )
+          .snapshots(),
       builder: (context,
           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -22,11 +27,14 @@ class Messages extends StatelessWidget {
         final chatDocs = snapshot.data!.docs;
         return ListView.builder(
           reverse: true,
-            itemCount: chatDocs.length,
-            itemBuilder: (context, index) {
-              return ChatBubble(chatDocs[index]['text'],chatDocs[index]['userID']==user!.uid);
-            },
+          itemCount: chatDocs.length,
+          itemBuilder: (context, index) {
+            return ChatBubbles(chatDocs[index]['text'],
+                chatDocs[index]['userID'] == user!.uid,
+                chatDocs[index]['username']
             );
+          },
+        );
       },
     );
   }
